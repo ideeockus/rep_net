@@ -1,0 +1,14 @@
+__pycache__/*
+*/__pycache__/*
+rep_net_proj_venv/*
+*.log
+testing_ver/*
+bot_pic.png
+
+server/.idea/*
+server/*db
+server/venv/*
+
+server/api_t.py
+server/database_module_t.py
+server/main.py

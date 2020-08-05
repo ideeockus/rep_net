@@ -1,0 +1,7 @@
+error_code 2: аккаунт не подтвержден
+error_code 4: логин занят
+error_code 3: email занят
+error_code 8: невалидный email
+error_code 5: неверный код верификации
+error_code 6: ошибка аутентификации
+error_code 7: недостаточно средств
