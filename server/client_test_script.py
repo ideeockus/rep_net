@@ -82,4 +82,9 @@ if action == "signup":
 if action == "signin":
     signin()
 
-
+while(True):
+    command = input()
+    if command=="journal":
+        journal_r = requests.post("http://127.0.0.1:8000/journal")
+        response = journal_r.json()
+        print("ыыы")

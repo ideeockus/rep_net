@@ -12,3 +12,4 @@ server/venv/*
 server/api_t.py
 server/database_module_t.py
 server/main.py
+server/c

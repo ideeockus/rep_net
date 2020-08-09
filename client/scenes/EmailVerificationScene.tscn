@@ -1,0 +1,35 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://rep_font.tres" type="DynamicFont" id=1]
+[ext_resource path="res://scenes/EmailVerificationScene.gd" type="Script" id=2]
+
+[node name="SigninScene" type="ColorRect"]
+margin_right = 576.0
+margin_bottom = 1024.0
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="OK_button" type="Button" parent="."]
+margin_left = 325.342
+margin_top = 610.611
+margin_right = 534.342
+margin_bottom = 686.611
+custom_fonts/font = ExtResource( 1 )
+text = "ok"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Code" type="LineEdit" parent="."]
+margin_left = 74.0
+margin_top = 81.0
+margin_right = 508.0
+margin_bottom = 172.0
+custom_fonts/font = ExtResource( 1 )
+align = 1
+placeholder_text = "code"
+__meta__ = {
+"_edit_use_anchors_": false
+}

@@ -54,6 +54,10 @@ app = FastAPI()
 @app.get("/signup")
 @app.post("/signup")
 async def signup(login: str, email: str, password: str):  # sign up
+
+    if (not login.strip()) or (not password.strip()) or (not email.strip()):
+        return {'error': "Не все поля заполнены", 'error_code': 1}
+
     password_hash = password_sha256_hash(password+login)
     verification_code = secrets.token_hex(3)
 
@@ -64,6 +68,11 @@ async def signup(login: str, email: str, password: str):  # sign up
     if (email,) in registered_emails:  # email check
         return {'error': "На эту почту уже зарегистрирована учетная запись", 'error_code': 3}  # error codes for better?
 
+    try:  # try to send email with code
+        send_mail(email, "Verification code", f"Hello, {login}\nYour verification code is: {verification_code}")
+    except smtplib.SMTPRecipientsRefused:  # if email invalid
+        return {'error': "invalid email", 'error_code': 8}
+
     new_acc_insert = accounts_db.insert().values(login=login, email=email,  # new user creation
                                                  password=password_hash, balance=1000,
                                                  verification_code=verification_code,
@@ -71,10 +80,6 @@ async def signup(login: str, email: str, password: str):  # sign up
                                                  )
     result = engine_connection.execute(new_acc_insert)
     account_id = result.inserted_primary_key
-    try:  # try to send email with code
-        send_mail(email, "Verification code", f"Hello, {login}\nYour verification code is: {verification_code}")
-    except smtplib.SMTPRecipientsRefused:  # if email invalid
-        return {'error': "invalid email", 'error_code': 8}
 
     print(f"new id {account_id}")
     return {'login': login, 'email': email, 'status': "ok", 'id': account_id[0]}
@@ -82,6 +87,9 @@ async def signup(login: str, email: str, password: str):  # sign up
 
 @app.post("/email_verification")
 async def email_verification(login: str, user_id: int, verification_code: str):
+    if (not login.strip()) or (not str(user_id).strip()) or (not verification_code.strip()):
+        return {'error': "Не все поля заполнены", 'error_code': 1}
+
     print(login, user_id, verification_code)
     db_veref_code = engine_connection.execute(select([accounts_db.c.verification_code])  # local verif code
                                               .where(accounts_db.c.id == user_id)).fetchone()[0]
@@ -91,14 +99,18 @@ async def email_verification(login: str, user_id: int, verification_code: str):
     if verification_code == db_veref_code:  # comparasion with verif code in request
         engine_connection.execute(accounts_db.update()
                                   .where(accounts_db.c.id == user_id)
-                                  .values(email_verification_status=True, token=token))
+                                  .values(email_verification_status=True, token=token, verification_code=""))
         return {'status': "ok", 'id': user_id, 'message': "verification successful", 'token': token}
     else:
         return {'id': user_id, 'error': "wrong code", 'error_code': 5}
 
 
+@app.get("/signin")
 @app.post("/signin")
 async def signin(login: str, password: str):
+    if (not login.strip()) or (not password.strip()):
+        return {'error': "Не все поля заполнены", 'error_code': 1}
+
     password_hash = password_sha256_hash(password+login)
 
     try:

@@ -1,0 +1,45 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://rep_Button.tscn" type="PackedScene" id=1]
+
+[node name="MarginContainer" type="MarginContainer"]
+margin_right = 576.0
+margin_bottom = 1024.0
+custom_constants/margin_right = 20
+custom_constants/margin_top = 40
+custom_constants/margin_left = 20
+custom_constants/margin_bottom = 20
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ColorRect" type="ColorRect" parent="."]
+margin_left = 20.0
+margin_top = 40.0
+margin_right = 556.0
+margin_bottom = 1004.0
+color = Color( 0.666667, 0.666667, 0.666667, 1 )
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+margin_left = 20.0
+margin_top = 40.0
+margin_right = 556.0
+margin_bottom = 1004.0
+
+[node name="TextEdit" type="TextEdit" parent="VBoxContainer"]
+margin_right = 536.0
+text = "asdasdas"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+margin_top = 4.0
+margin_right = 536.0
+margin_bottom = 24.0
+custom_constants/separation = 50
+
+[node name="Button" parent="VBoxContainer/HBoxContainer" instance=ExtResource( 1 )]
+margin_bottom = 20.0
+
+[node name="Button3" parent="VBoxContainer/HBoxContainer" instance=ExtResource( 1 )]
+margin_left = 293.0
+margin_right = 536.0
+margin_bottom = 20.0
