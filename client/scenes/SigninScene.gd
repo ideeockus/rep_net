@@ -43,15 +43,20 @@ func _on_SignIn_pressed():
 func _on_signin_request_completed(result, response_code, headers, body):
 	var json = JSON.parse(body.get_string_from_utf8())
 	var response = json.result
+	print(response)
 	
-	if not is_instance_valid(response):
+	"""if not is_instance_valid(response):
 		print("Ошибка на сервере")
 		return
-	#$HTTPRequest.queue_free()
+	#$HTTPRequest.queue_free()"""
 	
 	if 'token' in response:
 		token = response['token']
 		print(token)
+		var JournalScene = load("res://scenes/JournalScene.tscn").instance()
+		JournalScene.user_id = response['user_id']
+		JournalScene.token = response['token']
+		add_child(JournalScene)
 	elif 'error_code' in response:
 		error_handler(response)
 	else:
@@ -61,13 +66,18 @@ func _on_signin_request_completed(result, response_code, headers, body):
 func _on_emailverif_request_completed(result, response_code, headers, body):
 	var json = JSON.parse(body.get_string_from_utf8())
 	var response = json.result
-	if not is_instance_valid(response):
+	print(response)
+	"""if not is_instance_valid(response):
 		print("Ошибка на сервере")
-		return
+		return"""
 	
 	if 'token' in response:
 		token = response['token']
 		print(token)
+		var JournalScene = load("res://scenes/JournalScene.tscn").instance()
+		JournalScene.user_id = response['user_id']
+		JournalScene.token = response['token']
+		add_child(JournalScene)
 	elif 'error_code' in response:
 		error_handler(response)
 	else:

@@ -1,10 +1,11 @@
 import requests
+import sys
 
 
 #token = ""
 
 
-def signup() -> str:
+def signup() -> dict:
     login = input("login ")
     email = input("email ")
     password = input("password ")
@@ -26,7 +27,7 @@ def signup() -> str:
         signup()
 
 
-def email_verification(login, user_id):
+def email_verification(login, user_id) -> dict:
     verification_code = input("Код подтверждения: ")
     signup_v = requests.post("http://127.0.0.1:8000/email_verification",  # send verification code
                              params={'login': login, 'user_id': user_id, 'verification_code': verification_code})
@@ -34,7 +35,7 @@ def email_verification(login, user_id):
     print(response)
     if 'token' in response:
         # token = response['token']
-        return response['token']
+        return {'user_id': response['user_id'], 'token': response['token']}
     elif 'error_code' in response:
         error_handler(response)
     else:
@@ -42,7 +43,7 @@ def email_verification(login, user_id):
         signup()
 
 
-def signin() -> str:
+def signin() -> dict:
     login = input("login ")
     password = input("password ")
     signin_r = requests.post("http://127.0.0.1:8000/signin",
@@ -50,7 +51,7 @@ def signin() -> str:
     response = signin_r.json()
     print(response)
     if 'token' in response:
-        return response['token']
+        return {'user_id': response['user_id'], 'token': response['token']}
     elif 'error_code' in response:
         error_handler(response)
     else:
@@ -76,15 +77,55 @@ def error_handler(response):
         email_verification(response['login'], response['user_id'])
 
 
-action = input("Signin or signup? ")
-if action == "signup":
-    signup()
-if action == "signin":
-    signin()
+def get_id(token):
+    get_id_r = requests.post("http://127.0.0.1:8000/get_id", params={'token': token})
+    response = get_id_r.json()
+    if 'user_id' in response:
+        return response['user_id']
+    else:
+        print("id пользователя не определен")
 
+
+def authorization():
+    action = input("Signin or signup? ")
+    if action == "signup":
+        return signup()
+    if action == "signin":
+        return signin()
+
+
+auth_data = authorization()
+user_id = auth_data['user_id']
+token = auth_data['token']
+#user_id = get_id(token)
+if not user_id:
+    print("выхожу")
+    sys.exit()
+commands = ["journal", "balance", "transfer", "help"]
 while(True):
-    command = input()
-    if command=="journal":
+    command = input(">")
+    if command == "journal":
         journal_r = requests.post("http://127.0.0.1:8000/journal")
         response = journal_r.json()
+        for user in response['journal']:
+            print(str(user['id'])+" "+user['login']+" "+str(user['balance']))
+        # print("journal: ")
+        # print(response)
+    if command == "balance":
+        journal_r = requests.post("http://127.0.0.1:8000/get_balance", params={'user_id': user_id})
+        response = journal_r.json()
+        print("balance: ")
+        print(response)
+    if command == "transfer":
+        dst_id = input("id адресата ")
+        amount = input("количество ")
+        journal_r = requests.post("http://127.0.0.1:8000/transfer",
+                                  params={'src_id': user_id, 'dst_id': dst_id, 'rep_amount': amount})
+        response = journal_r.json()
         print("ыыы")
+        print(response)
+    if command == "help":
+        print(commands)
+    else:
+        if command not in commands:
+            print("Unknown command")

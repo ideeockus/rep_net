@@ -128,44 +128,46 @@ async def signin(login: str, password: str):
     # Check if this account is unverified
     user_email_verification = engine_connection.execute(select([accounts_db.c.email_verification_status])
                                                         .where(accounts_db.c.id == user_id)).fetchone()[0]
-    """user_email_verification = engine_connection.execute(select([accounts_db.c.email_verification_status])
-                                                        .where(accounts_db.c.login == login)
-                                                        .where(accounts_db.c.password == password_hash)).fetchone()[0]"""
     if not user_email_verification:
         return {'error': "Аккаунт не подтвержден", 'login': login, 'user_id': user_id, 'error_code': 2}
 
     token = secrets.token_urlsafe(32)
-    """engine_connection.execute(accounts_db.update()
-                              .where(accounts_db.c.login == login).where(accounts_db.c.password == password_hash)
-                              .values(token=token))"""
     engine_connection.execute(accounts_db.update().where(accounts_db.c.id==user_id).values(token=token))
-    return {'token': token}
+    return {'user_id': user_id, 'token': token}
 
 
-def get_id(token):
+@app.post("/get_id")
+def get_id(token: str):
     # I guess that there can be only one record with such token
     user_id = engine_connection.execute(select([accounts_db.c.id]).where(accounts_db.c.token == token)).fetchone()[0]
+    if not user_id:
+        return {'user_id': user_id}
+    else:
+        return {'error': "ошибка"}
 
 
+@app.post("/journal")
 def get_all_accounts():
-    journal = engine_connection.execute(select([accounts_db.c.login, accounts_db.c.balance])).fetchall()
+    journal = engine.execute(select([accounts_db.c.login, accounts_db.c.balance, accounts_db.c.id])).fetchall()
+    return {'journal': journal}
 
 
-def get_balance(user_id):
-    user_balance = engine_connection.execute(select([accounts_db.c.balance])
-                                             .where(accounts_db.c.id == user_id)).fetchone()[0]
-    return user_balance
+@app.post("/get_balance")
+def get_balance(user_id: int):
+    user_balance = engine.execute(select([accounts_db.c.balance]).where(accounts_db.c.id == user_id)).fetchone()[0]
+    return {'user_id': user_id, 'balance': user_balance}
 
 
+@app.post("/transfer")
 def transfer(src_id: int, dst_id: int, rep_amount: int):
-    src_balance = get_balance(src_id)
-    dst_balance = get_balance(dst_id)
+    src_balance = get_balance(src_id)['balance']
+    dst_balance = get_balance(dst_id)['balance']
 
     if not src_balance >= rep_amount:  # check for needed amount rep on account
         return {'error': "Недостаточно средств", 'error_code': 7}
 
     src_balance = src_balance - rep_amount
-    dst_balance = get_balance(dst_id) + rep_amount
-    engine_connection.execute(accounts_db.update().where(accounts_db.c.id == src_id).values(balance=src_balance))
-    engine_connection.execute(accounts_db.update().where(accounts_db.c.id == dst_id).values(balance=dst_balance))
+    dst_balance = dst_balance + rep_amount
+    engine.execute(accounts_db.update().where(accounts_db.c.id == src_id).values(balance=src_balance))
+    engine.execute(accounts_db.update().where(accounts_db.c.id == dst_id).values(balance=dst_balance))
     return {'status': "ok", 'balance': src_balance}
