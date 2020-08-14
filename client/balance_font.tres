@@ -1,7 +1,8 @@
 [gd_resource type="DynamicFont" load_steps=2 format=2]
 
-[ext_resource path="res://APL386.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://Liter-Regular.ttf" type="DynamicFontData" id=1]
 
 [resource]
 size = 45
+use_filter = true
 font_data = ExtResource( 1 )

@@ -7,6 +7,7 @@ extends ColorRect
 var rep_url = "http://127.0.0.1:8000"
 var token
 var user_id
+var button_dst_id
 
 
 # Called when the node enters the scene tree for the first time.
@@ -37,12 +38,14 @@ func _on_journal_request_completed(result, response_code, headers, body):
 	print(response)
 	for user in response['journal']:
 		var person_button_text = str(user['id'])+" "+user['login']+" "+str(user['balance'])
+		
 		var person_button = Button.new()
 		person_button.text = person_button_text
 		#person_button.theme.set_font()
 		person_button.set("custom_fonts/font", load("res://rep_font.tres"))
 		#person_button.set("custom_colors/font_color", "#000000")
 		person_button.align = Button.ALIGN_LEFT
+		# person_button.person_id = user['id']
 		person_button.connect("pressed", self, "_on_person_button_pressed")
 		$ScrollContainer/PersonsContainer.add_child(person_button)
 		
@@ -54,4 +57,7 @@ func _on_balance_request_completed(result, response_code, headers, body):
 	var user_balance = response['balance']
 	$HBoxContainer/Balance.text = str(user_balance)
 	
+	
+func _on_person_button_pressed():
+	pass
 

@@ -1,11 +1,13 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
+[ext_resource path="res://rep_theme.tres" type="Theme" id=1]
 [ext_resource path="res://scenes/JournalScene.gd" type="Script" id=2]
 [ext_resource path="res://balance_font.tres" type="DynamicFont" id=3]
 
 [node name="JournalScene" type="ColorRect"]
 margin_right = 576.0
 margin_bottom = 1024.0
+theme = ExtResource( 1 )
 script = ExtResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -21,9 +23,9 @@ __meta__ = {
 }
 
 [node name="Balance" type="Label" parent="HBoxContainer"]
-margin_top = 34.0
+margin_top = 33.0
 margin_right = 451.0
-margin_bottom = 86.0
+margin_bottom = 87.0
 size_flags_horizontal = 3
 custom_fonts/font = ExtResource( 3 )
 custom_colors/font_color = Color( 0.152941, 0.894118, 0.188235, 1 )
@@ -37,11 +39,10 @@ __meta__ = {
 
 [node name="BalanceText" type="Label" parent="HBoxContainer"]
 margin_left = 455.0
-margin_top = 34.0
+margin_top = 33.0
 margin_right = 536.0
-margin_bottom = 86.0
+margin_bottom = 87.0
 custom_fonts/font = ExtResource( 3 )
-custom_colors/font_color = Color( 0.152941, 0.894118, 0.188235, 1 )
 text = "rep"
 valign = 1
 uppercase = true
@@ -50,14 +51,17 @@ __meta__ = {
 }
 
 [node name="ScrollContainer" type="ScrollContainer" parent="."]
+margin_left = 20.0
 margin_top = 303.0
-margin_right = 576.0
+margin_right = 556.0
 margin_bottom = 1024.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="PersonsContainer" type="VBoxContainer" parent="ScrollContainer"]
+margin_right = 536.0
+size_flags_horizontal = 3
 __meta__ = {
 "_edit_use_anchors_": false
 }

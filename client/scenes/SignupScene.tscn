@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://rep_font.tres" type="DynamicFont" id=1]
 [ext_resource path="res://scenes/SignupScene.gd" type="Script" id=2]
+[ext_resource path="res://rep_theme.tres" type="Theme" id=3]
 
 [node name="SignupScene" type="ColorRect"]
 margin_right = 576.0
@@ -16,6 +17,7 @@ margin_left = 325.342
 margin_top = 610.611
 margin_right = 534.342
 margin_bottom = 686.611
+theme = ExtResource( 3 )
 custom_fonts/font = ExtResource( 1 )
 text = "SignUp"
 __meta__ = {
@@ -27,6 +29,7 @@ margin_left = 50.2332
 margin_top = 610.611
 margin_right = 259.233
 margin_bottom = 686.611
+theme = ExtResource( 3 )
 custom_fonts/font = ExtResource( 1 )
 text = "назад"
 __meta__ = {
@@ -38,6 +41,7 @@ margin_left = 74.0
 margin_top = 81.0
 margin_right = 508.0
 margin_bottom = 172.0
+theme = ExtResource( 3 )
 custom_fonts/font = ExtResource( 1 )
 align = 1
 placeholder_text = "login"
@@ -50,6 +54,7 @@ margin_left = 74.0
 margin_top = 212.0
 margin_right = 508.0
 margin_bottom = 303.0
+theme = ExtResource( 3 )
 custom_fonts/font = ExtResource( 1 )
 align = 1
 placeholder_text = "email"
@@ -62,8 +67,10 @@ margin_left = 74.0
 margin_top = 332.779
 margin_right = 508.0
 margin_bottom = 423.779
+theme = ExtResource( 3 )
 custom_fonts/font = ExtResource( 1 )
 align = 1
+secret = true
 placeholder_text = "password"
 __meta__ = {
 "_edit_use_anchors_": false

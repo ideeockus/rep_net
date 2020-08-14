@@ -71,19 +71,20 @@ def error_handler(response):
         6: "Данные для входа не верны",
         7: "На вашем балансе недостаточно средств",
         8: "Проверьте корректность ввода почты",
+        9: "Неверный токен",
     }
     print(e[error_code])
     if error_code == 2:
         email_verification(response['login'], response['user_id'])
 
 
-def get_id(token):
+"""def get_id(token):
     get_id_r = requests.post("http://127.0.0.1:8000/get_id", params={'token': token})
     response = get_id_r.json()
     if 'user_id' in response:
         return response['user_id']
     else:
-        print("id пользователя не определен")
+        print("id пользователя не определен")"""
 
 
 def authorization():
@@ -120,7 +121,7 @@ while(True):
         dst_id = input("id адресата ")
         amount = input("количество ")
         journal_r = requests.post("http://127.0.0.1:8000/transfer",
-                                  params={'src_id': user_id, 'dst_id': dst_id, 'rep_amount': amount})
+                                  params={'src_id': user_id, 'dst_id': dst_id, 'rep_amount': amount, 'token': token})
         response = journal_r.json()
         print("ыыы")
         print(response)

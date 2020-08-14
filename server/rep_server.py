@@ -121,26 +121,26 @@ async def signin(login: str, password: str):
         return {'error': "Ошибка авторизации", 'error_code': 6}
 
     # I guess that there can be only one record with such login:password pair
-    user_id = engine_connection.execute(select([accounts_db.c.id])
+    user_id = engine.execute(select([accounts_db.c.id])
                                         .where(accounts_db.c.login == login)
                                         .where(accounts_db.c.password == password_hash)).fetchone()[0]
 
     # Check if this account is unverified
-    user_email_verification = engine_connection.execute(select([accounts_db.c.email_verification_status])
+    user_email_verification = engine.execute(select([accounts_db.c.email_verification_status])
                                                         .where(accounts_db.c.id == user_id)).fetchone()[0]
     if not user_email_verification:
         return {'error': "Аккаунт не подтвержден", 'login': login, 'user_id': user_id, 'error_code': 2}
 
     token = secrets.token_urlsafe(32)
-    engine_connection.execute(accounts_db.update().where(accounts_db.c.id==user_id).values(token=token))
+    engine.execute(accounts_db.update().where(accounts_db.c.id==user_id).values(token=token))
     return {'user_id': user_id, 'token': token}
 
 
-@app.post("/get_id")
 def get_id(token: str):
     # I guess that there can be only one record with such token
-    user_id = engine_connection.execute(select([accounts_db.c.id]).where(accounts_db.c.token == token)).fetchone()[0]
-    if not user_id:
+    user_id = engine.execute(select([accounts_db.c.id]).where(accounts_db.c.token==token)).fetchone()[0]
+    print(user_id)
+    if user_id:
         return {'user_id': user_id}
     else:
         return {'error': "ошибка"}
@@ -159,7 +159,20 @@ def get_balance(user_id: int):
 
 
 @app.post("/transfer")
-def transfer(src_id: int, dst_id: int, rep_amount: int):
+def transfer(src_id: int, dst_id: int, rep_amount: int, token: str):
+
+    if src_id==dst_id:
+        return {'error': "self transaction not allowed", 'error_code': 9}
+
+    get_id_req = get_id(token)
+    if not ('user_id' in get_id_req):
+        return get_id_req
+    token_owner_id = get_id_req['user_id']
+    if not (token_owner_id == src_id):
+        print("SRC_ID:"+str(src_id))
+        print("TOKEN OWNER ID"+str(token_owner_id))
+        return {'error': "wrong token", 'error_code': 9}
+
     src_balance = get_balance(src_id)['balance']
     dst_balance = get_balance(dst_id)['balance']
 
