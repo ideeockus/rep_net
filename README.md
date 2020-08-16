@@ -8,6 +8,12 @@ consists of two parts:
 all parts based on python
 
 ### frameworks:
-* kivy 
+
+##### client:
+
+* ##### godot engine
+
+##### server:
+
 * fastapi
-* sqlalchey
+* sqlalchemy
