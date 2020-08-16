@@ -13,19 +13,32 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
 margin_left = 20.0
-margin_top = 30.0
+margin_top = 100.0
 margin_right = 556.0
-margin_bottom = 150.0
+margin_bottom = 212.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Balance" type="Label" parent="HBoxContainer"]
-margin_top = 33.0
+[node name="UserName" type="Label" parent="VBoxContainer"]
+margin_right = 536.0
+margin_bottom = 54.0
+custom_fonts/font = ExtResource( 3 )
+text = "Загрузка..."
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+margin_top = 58.0
+margin_right = 536.0
+margin_bottom = 112.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Balance" type="Label" parent="VBoxContainer/HBoxContainer"]
 margin_right = 451.0
-margin_bottom = 87.0
+margin_bottom = 54.0
 size_flags_horizontal = 3
 custom_fonts/font = ExtResource( 3 )
 custom_colors/font_color = Color( 0.152941, 0.894118, 0.188235, 1 )
@@ -37,11 +50,10 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="BalanceText" type="Label" parent="HBoxContainer"]
+[node name="BalanceText" type="Label" parent="VBoxContainer/HBoxContainer"]
 margin_left = 455.0
-margin_top = 33.0
 margin_right = 536.0
-margin_bottom = 87.0
+margin_bottom = 54.0
 custom_fonts/font = ExtResource( 3 )
 text = "rep"
 valign = 1

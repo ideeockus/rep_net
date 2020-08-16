@@ -5,9 +5,9 @@
 [ext_resource path="res://rep_theme.tres" type="Theme" id=3]
 
 [node name="SigninScene" type="ColorRect"]
-margin_top = -2.1189
+margin_top = 1.65661
 margin_right = 576.0
-margin_bottom = 1021.88
+margin_bottom = 1025.66
 theme = ExtResource( 3 )
 script = ExtResource( 2 )
 __meta__ = {
@@ -15,9 +15,9 @@ __meta__ = {
 }
 
 [node name="SignIn" type="Button" parent="."]
-margin_left = 325.342
+margin_left = 320.852
 margin_top = 610.611
-margin_right = 534.342
+margin_right = 529.852
 margin_bottom = 686.611
 custom_fonts/font = ExtResource( 1 )
 text = "войти"
@@ -26,12 +26,12 @@ __meta__ = {
 }
 
 [node name="SignUp" type="Button" parent="."]
-margin_left = 52.0006
+margin_left = 40.8878
 margin_top = 610.611
-margin_right = 261.001
+margin_right = 289.888
 margin_bottom = 686.611
 custom_fonts/font = ExtResource( 1 )
-text = "signup"
+text = "новый аккаунт"
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -55,6 +55,7 @@ margin_right = 508.0
 margin_bottom = 328.0
 custom_fonts/font = ExtResource( 1 )
 align = 1
+secret = true
 placeholder_text = "password"
 __meta__ = {
 "_edit_use_anchors_": false

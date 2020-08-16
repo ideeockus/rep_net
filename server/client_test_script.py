@@ -14,16 +14,17 @@ def signup() -> dict:
     password = "mysecretpass"""""
     signup_r = requests.post("http://127.0.0.1:8000/signup", params={'login': login, 'email': email, 'password': password})
     response = signup_r.json()
+    print("signup response:")
     print(response)
-    print()
 
-    if 'id' in response:
-        user_id = response['id']
+    if 'user_id' in response:
+        user_id = response['user_id']
         return email_verification(login, user_id)
     elif 'error_code' in response:
         error_handler(response)
     else:
-        print("error")
+        print("error (signup)")
+        print("(probably wrong api)")
         signup()
 
 
@@ -56,6 +57,7 @@ def signin() -> dict:
         error_handler(response)
     else:
         print("Ошибка при авторизации")
+        print("(probably wrong api)")
         signin()
 
 
@@ -96,6 +98,7 @@ def authorization():
 
 
 auth_data = authorization()
+print(auth_data)
 user_id = auth_data['user_id']
 token = auth_data['token']
 #user_id = get_id(token)
@@ -109,7 +112,7 @@ while(True):
         journal_r = requests.post("http://127.0.0.1:8000/journal")
         response = journal_r.json()
         for user in response['journal']:
-            print(str(user['id'])+" "+user['login']+" "+str(user['balance']))
+            print(str(user['id'])+" "+user['login']+" "+str(user['balance'])) # id from databse
         # print("journal: ")
         # print(response)
     if command == "balance":

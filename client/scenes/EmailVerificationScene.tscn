@@ -19,7 +19,7 @@ margin_top = 610.611
 margin_right = 534.342
 margin_bottom = 686.611
 custom_fonts/font = ExtResource( 1 )
-text = "ok"
+text = "ок"
 __meta__ = {
 "_edit_use_anchors_": false
 }

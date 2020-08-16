@@ -16,6 +16,10 @@ _global_script_class_icons={
 [application]
 
 config/name="rep_client"
+run/main_scene="res://scenes/SigninScene.tscn"
+boot_splash/image="res://icon.png"
+boot_splash/fullsize=false
+boot_splash/bg_color=Color( 0.321569, 0.87451, 0.486275, 1 )
 config/icon="res://icon.png"
 
 [display]

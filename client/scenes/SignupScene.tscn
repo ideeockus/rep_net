@@ -19,7 +19,7 @@ margin_right = 534.342
 margin_bottom = 686.611
 theme = ExtResource( 3 )
 custom_fonts/font = ExtResource( 1 )
-text = "SignUp"
+text = "ОК"
 __meta__ = {
 "_edit_use_anchors_": false
 }

@@ -4,7 +4,10 @@ extends ColorRect
 # Declare member variables here. Examples:
 # var a = 2
 # var b = "text"
-var rep_url = "http://127.0.0.1:8000"
+#var rep_url = "http://127.0.0.1:8000"
+var rep_url = "https://repnet.herokuapp.com"
+var config = ConfigFile.new()
+var config_status = config.load("user://settings.cfg")
 var login
 var user_id
 var token
@@ -12,6 +15,14 @@ var token
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	#if config_status == OK:
+	var authorization_status = config.get_value("authorization", "status", 0)
+	if authorization_status==1:
+		print("authorized")
+		var JournalScene = load("res://scenes/JournalScene.tscn").instance()
+		JournalScene.user_id = config.get_value("authorization", "user_id")
+		JournalScene.token = config.get_value("authorization", "token")
+		add_child(JournalScene)
 	$SignIn.connect("pressed", self, "_on_SignIn_pressed")
 	$SignUp.connect("pressed", self, "_on_SignUp_pressed")
 	
@@ -24,8 +35,8 @@ func _on_SignUp_pressed():
 	
 	
 func _on_SignIn_pressed():
-	login = $Login.text
-	var password = $Password.text
+	login = $Login.text.http_escape()
+	var password = $Password.text.http_escape()
 	
 	if (not login) or (not password):
 		print("данные не введены")
@@ -45,18 +56,20 @@ func _on_signin_request_completed(result, response_code, headers, body):
 	var response = json.result
 	print(response)
 	
-	"""if not is_instance_valid(response):
-		print("Ошибка на сервере")
-		return
-	#$HTTPRequest.queue_free()"""
-	
 	if 'token' in response:
 		token = response['token']
 		print(token)
 		var JournalScene = load("res://scenes/JournalScene.tscn").instance()
 		JournalScene.user_id = response['user_id']
 		JournalScene.token = response['token']
+		if config_status == 7:  # если файла нету
+			config.set_value("authorization", "user_id", response['user_id'])
+			config.set_value("authorization", "token", response['token'])
+			config.set_value("authorization", "status", 1)
+			print("authorization saved")
+			config.save("user://settings.cfg")
 		add_child(JournalScene)
+		
 	elif 'error_code' in response:
 		error_handler(response)
 	else:
@@ -67,9 +80,6 @@ func _on_emailverif_request_completed(result, response_code, headers, body):
 	var json = JSON.parse(body.get_string_from_utf8())
 	var response = json.result
 	print(response)
-	"""if not is_instance_valid(response):
-		print("Ошибка на сервере")
-		return"""
 	
 	if 'token' in response:
 		token = response['token']
@@ -77,6 +87,11 @@ func _on_emailverif_request_completed(result, response_code, headers, body):
 		var JournalScene = load("res://scenes/JournalScene.tscn").instance()
 		JournalScene.user_id = response['user_id']
 		JournalScene.token = response['token']
+		if config_status == 7:  # если файла нету
+			config.set_value("authorization", "user_id", response['user_id'])
+			config.set_value("authorization", "token", response['token'])
+			config.set_value("authorization", "status", 1)
+			print("authorization saved")
 		add_child(JournalScene)
 	elif 'error_code' in response:
 		error_handler(response)
@@ -106,10 +121,8 @@ func error_handler(response):
 		6: "Данные для входа не верны",
 		7: "На вашем балансе недостаточно средств",
 		8: "Проверьте корректность ввода почты",
+		9: "Неверный токен",
 	}
-	#print(e.keys())
-	#print(e)
-	#print(e[4])
 	print(e[int(error_code)])
 	if error_code == 2:
 		email_verification(response['login'], response['user_id'])
